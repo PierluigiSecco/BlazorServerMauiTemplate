@@ -6,4 +6,13 @@
 
 Welcome to your new app.
 
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <Authorized>
+        <p>Welcome, @context.User.Identity.Name</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>You are signed out!!</p>
+    </NotAuthorized>
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+
 <SurveyPrompt Title="How is Blazor working for you?" />

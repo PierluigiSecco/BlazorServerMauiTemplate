@@ -1,5 +1,6 @@
 ﻿using BlazorServerMaui.WebComponents.Data;
-using Microsoft.AspNetCore.Components.WebView.Maui;
+using BlazorServerMaui.WebComponents.Data.Services.ProductService;
+using Radzen;
 
 namespace BlazorServerMAui.App
 {
@@ -21,6 +22,12 @@ namespace BlazorServerMAui.App
 #endif
 
             builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddSingleton<ProductService>();
+
+            builder.Services.AddScoped<DialogService>();
+            builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<TooltipService>();
+            builder.Services.AddScoped<ContextMenuService>();
 
             return builder.Build();
         }

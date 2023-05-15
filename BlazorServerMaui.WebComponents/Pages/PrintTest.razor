@@ -1,0 +1,85 @@
+﻿@layout BlankLayout
+@page "/print-test"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using BlazorServerMaui.WebComponents.Data
+@using BlazorServerMaui.WebComponents.Data.Entities
+@using BlazorServerMaui.WebComponents.Data.Services.ProductService
+@using webenology.blazor.components.BlazorPdfComponent
+@inject WeatherForecastService ForecastService
+@inject ProductService ProductService
+
+    <h1>Weather forecast</h1>
+
+    <p>This component demonstrates fetching data from a service.</p>
+<body onload="window.print()">
+    @if (forecasts == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        @foreach (var p in _products)
+        {
+            <p>@p.Title</p>
+        }
+
+        <RadzenDataGrid Data="_products"
+                        TItem="Product"
+                        AllowFiltering="true" AllowSorting="true" PageSize="5" AllowPaging="true"
+                        lang="it" role="form">
+            <Columns>
+                <RadzenDataGridColumn TItem="Product" Property="Title" Title="Title">
+                    <Template Context="p">@p.Title</Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price">
+                    <Template Context="p">@p.Price</Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Product" Property="Description" Title="Description">
+                    <Template Context="p">@p.Description</Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+
+        <div alt="testo da compilare">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3" alt="input di testo">TextArea</RadzenText>
+                <RadzenTextArea class="w-100" />
+            </RadzenCard>
+        </div>
+
+
+    }
+</body>
+@code {
+    private WeatherForecast[]? forecasts;
+    private List<Product> _products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        _products = await ProductService.GetProducts();
+    }
+}

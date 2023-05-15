@@ -1,0 +1,59 @@
+﻿@page "/select"
+<RadzenCard class="p-0 rz-shadow-0">
+    <RadzenStack Orientation="Orientation.Vertical" Gap="5px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" Style="height: 85vh">
+        <RadzenCard class="p-5  rz-text-align-center rz-shadow-0">
+            @*<RadzenTemplateForm TItem="string" Data="@newValue" Submit="@Submit">
+                <DataAnnotationsValidator />
+                <RadzenText TextStyle="TextStyle.Subtitle2" role="presentation" aria-label="Seleziona il progetto">Scegli il progetto</RadzenText>
+                <RadzenDropDown @bind-Value="@value" Data="@companyNames" Style="width: 100%; max-width: 400px;" aria-label="seleziona un progetto"/>
+                <ValidationMessage For="@(() => value)" />
+                <RadzenButton class="mt-2" ButtonType="ButtonType.Submit">Entra</RadzenButton>
+            </RadzenTemplateForm>*@
+            
+            <RadzenTemplateForm TItem="string" Data="@newValue" Submit="@Submit">
+                <DataAnnotationsValidator />
+                <RadzenText class="mt-5" TextStyle="TextStyle.Subtitle2" role="presentation" aria-label="Seleziona il progetto">Scegli il progetto</RadzenText>
+                <select class="form-select " style="width:320px;" @bind="newValue" aria-label="Seleziona il progetto e premi tab per andare avanti">
+                    <option selected aria-label="annulla selezione" value="">Seleziona...</option>
+                    @foreach (var p in companyNames)
+                    {
+                        <option value="@p" aria-label="@p" role="option">@p</option>
+                    }
+                </select>
+                <ValidationMessage For="@(() => newValue)" />
+                <RadzenButton class="mt-2" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Danger">Entra</RadzenButton>
+            </RadzenTemplateForm>
+        </RadzenCard>
+
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="25px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+            <RadzenImage Path="https://nslab.imtlucca.it/wp-content/uploads/2020/10/Logo_ita.png" Style="width:100px; height:auto" alt="Logo IMT"></RadzenImage>
+            <RadzenImage Path="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpIZQaMFiqKKs9Q_QHAZpqPL4ixXMLJjuqkw&usqp=CAU" Style="width:100px; height:auto" alt="logo NS Lab"></RadzenImage>
+        </RadzenStack>
+    </RadzenStack>
+
+</RadzenCard>
+
+@code {
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    string newValue = string.Empty;
+    string value = "Seleziona...";
+    IEnumerable<string> companyNames;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        companyNames = new List<string>
+        {
+            "Progetto A","Progetto B", "Progetto C"
+        };
+    }
+
+    void Submit()
+    {
+        Console.WriteLine(newValue);
+        NavigationManager.NavigateTo("/form-test");
+    }
+}

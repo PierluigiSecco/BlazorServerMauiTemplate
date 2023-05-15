@@ -1,0 +1,42 @@
+﻿@page "/form-test"
+
+<div class="rz-p-12 rz-text-align-center">
+    <RadzenNumeric ShowUpDown="false" TValue="int?" @bind-Value="@value" aria-label="Inserisci un numero" />
+</div>
+<div class="rz-p-12 rz-text-align-center">
+    <RadzenPassword @bind-Value="@password" role="presentation" aria-label="Inserisci password" />
+</div>
+@*<div class="rz-p-12 rz-text-align-center">
+    <RadzenCheckBoxList Data="@data" @bind-Value=@values TValue="int" TextProperty="Name" ValueProperty="Id" class="mb-5"
+                        ReadOnlyProperty="ReadOnly" DisabledProperty="Disabled" />
+</div>*@
+<RadzenCard class="p-5  rz-text-align-center rz-shadow-0">
+    
+        @foreach (var d in data)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" style="margin-left: 350px" value="@d.ReadOnly" id="@d.Name" aria-label="seleziona il campo @d.Name">
+                <label class="form-check-label" style="margin-right: 45%" for="@d.Name">
+                    @d.Name
+                </label>
+            </div>
+        }
+</RadzenCard>
+
+@code {
+    int? value;
+    string password;
+
+    IEnumerable<int> values = new int[] { 1 };
+
+    public class MyObject
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool ReadOnly { get; set; }
+        public bool Disabled { get; set; }
+    }
+
+    IEnumerable<MyObject> data = new MyObject[] {
+        new MyObject(){ Id = 1 , Name = "Orders", ReadOnly = true}, new MyObject() { Id = 2 , Name = "Employees", Disabled = true}, new MyObject() { Id = 3 , Name = "Customers" } };
+}

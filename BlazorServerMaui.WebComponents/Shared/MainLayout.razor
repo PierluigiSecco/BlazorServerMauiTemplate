@@ -1,6 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@using BlazorServerMaui.WebComponents.Data.Auth;
+@using Microsoft.AspNetCore.Components.Authorization;
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>BlazorServerMaui</PageTitle>
+<RadzenDialog/>
+<RadzenNotification/>
+<RadzenContextMenu/>
+<RadzenTooltip/>
 
 <div class="page">
     <div class="sidebar">
@@ -9,7 +16,15 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                <Authorized>
+                    <a href="/form" @onclick="(()=> Logout())" >Logout</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/form">Login</a>
+                </NotAuthorized>
+            </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">Benvenuto XYZ002EF</a>
         </div>
 
         <article class="content px-4">
@@ -17,3 +32,10 @@
         </article>
     </main>
 </div>
+
+@code{
+    public void Logout()
+    {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedout();
+    }
+}

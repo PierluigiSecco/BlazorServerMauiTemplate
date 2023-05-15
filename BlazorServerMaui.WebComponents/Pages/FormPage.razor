@@ -1,0 +1,82 @@
+﻿@page "/form"
+@using BlazorServerMaui.WebComponents.Data.Auth;
+@using BlazorServerMaui.WebComponents.Data.Entities
+@using System.Text.Json
+@using BlazorServerMaui.WebComponents.Data.Services.ProductService
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject ProductService ProductService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
+<RadzenCard class="p-0 rz-shadow-0">
+    <RadzenStack Orientation="Orientation.Vertical" Gap="5px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" Style="height: 85vh">
+
+        <RadzenCard class="p-5  rz-text-align-center rz-shadow-0">
+            <RadzenTemplateForm TItem="CodicePersonale" Data="@cp" Submit="@OnChange">
+                <DataAnnotationsValidator/>
+                @*<RadzenText TextStyle="TextStyle.Subtitle2" role="presentation">Codice Personale</RadzenText>
+                <RadzenTextBox class="w-100" @bind-Value="cp.CodPersonale" TValue="string" aria-label="Input per codice personale"/>*@
+                <label for="codpersonale" class="form-label ms-2">Codice Personale</label>
+                <InputText id="codpersonale" class="form-control ms-3" style="width:320px" @bind-Value="cp.CodPersonale" aria-label="Input per codice personale" />
+                <ValidationMessage For="@(() => cp.CodPersonale)" aria-label="Il campo codice personale non può essere vuoto" />
+
+                <RadzenButton class="mt-2" ButtonType="ButtonType.Submit">Entra</RadzenButton>
+            </RadzenTemplateForm>
+        </RadzenCard>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="25px" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+            <RadzenImage Path="https://nslab.imtlucca.it/wp-content/uploads/2020/10/Logo_ita.png" Style="width: 100px; height: auto" alt="Logo IMT"></RadzenImage>
+            <RadzenImage Path="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpIZQaMFiqKKs9Q_QHAZpqPL4ixXMLJjuqkw&usqp=CAU" Style="width: 100px; height: auto" alt="logo NS Lab"></RadzenImage>
+        </RadzenStack>
+        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="#" role="presentation">
+        Underline opacity 0
+        </a>
+    </RadzenStack>
+    
+</RadzenCard>
+
+
+@*<div class="container text-center mb-5" style="padding-top: 20vh">
+        <div class="row align-items-center">
+        <div class="col">
+        </div>
+        <div class="col">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput" class="form-label">Codice Personale</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput">
+                    </div>
+                    <button type="button" class="btn btn-primary mb-5">Primary</button>
+                    <div>
+                    <img src="https://nslab.imtlucca.it/wp-content/uploads/2020/10/Logo_ita.png" Style="width: 100px; height: auto" class="rounded float-start" alt="Logo IMT">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpIZQaMFiqKKs9Q_QHAZpqPL4ixXMLJjuqkw&usqp=CAU" Style="width: 100px; height: auto" class="rounded float-end" alt="logo NS Lab">
+                    </div>
+                    </div>
+            </div>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</div>*@
+
+
+@code {
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    CodicePersonale cp = new CodicePersonale();
+
+    void OnChange()
+    {
+        Console.WriteLine(JsonSerializer.Serialize(cp));
+        Console.WriteLine(cp.CodPersonale);
+        //ProductService.Login(cp.CodPersonale);
+
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(cp.CodPersonale);
+
+        SessionStorage.SetItemAsync("userCode", cp.CodPersonale);
+
+        NavigationManager.NavigateTo("/select");
+    }
+}
+
